@@ -1,17 +1,25 @@
 import React, { Component } from 'react';
 import List from './list';
+import store from '../reducers/store';
+import { setFilter } from '../actions/index';
 
 class FilterList extends Component {
   constructor() {
     super();
 
-    this.state = {
-      filterBy: ''
-    };
+    this.state = store.getState();
+
+    this.unsubscribe = store.subscribe(() => {
+      this.setState(store.getState());
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   updateFilter(event) {
-    this.setState({filterBy: event.target.value});
+    store.dispatch(setFilter(event.target.value));
   }
 
   render() {
